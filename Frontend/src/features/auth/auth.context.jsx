@@ -6,7 +6,21 @@ export const AuthContext = createContext()
 export function AuthProvider({ children }) {
 
     const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchMe = async () => {
+            try {
+                const response = await getMe()
+                setUser(response.user)
+            } catch (err) {
+                console.log("Not logged in or error:", err)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchMe()
+    }, [])
 
     const handleRegister = async (username, email, password) => {
         setLoading(true)

@@ -3,11 +3,11 @@ import "../style/feed.scss"
 import Post from '../components/Post'
 import { usePost } from '../hooks/usePost'
 import { useEffect } from 'react'
-import Navbar from '../components/Navbar'
+import Sidebar from '../components/Sidebar'
 
 const Feed = () => {
 
-    const { loading, handleGetFeed, feed, handleLikePost, handleUnlikePost } = usePost()
+    const { loading, handleGetFeed, feed, handleLikePost, handleUnlikePost, handleDeletePost } = usePost()
 
     useEffect(function () {
         handleGetFeed()
@@ -15,8 +15,11 @@ const Feed = () => {
 
     if (loading || !feed) {
         return (
-            <main>
-                <h1>Feed is Loading...</h1>
+            <main className="feed-page page-layout">
+                <Sidebar />
+                <div className="loading-spinner-container">
+                    <div className="loading-spinner"></div>
+                </div>
             </main>
         )
     }
@@ -25,12 +28,12 @@ const Feed = () => {
 
 
     return (
-        <main className="feed-page">
-            <Navbar />
+        <main className="feed-page page-layout">
+            <Sidebar />
             <div className="feed">
                 <div className="posts">
                     {feed.map(post => {
-                        return <Post user={post.user} post={post} loading={loading} handleLikePost={handleLikePost} handleUnlikePost={handleUnlikePost} />
+                        return <Post key={post._id} user={post.user} post={post} loading={loading} handleLikePost={handleLikePost} handleUnlikePost={handleUnlikePost} handleDeletePost={handleDeletePost} />
                     })}
                 </div>
 

@@ -1,0 +1,123 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px;
+    background-color: var(--bg-color, #000);
+    border-right: 1px solid var(--border-color, #262626);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    z-index: 100;
+
+    .sidebar-logo {
+        margin-bottom: 40px;
+        padding-left: 10px;
+        a {
+            color: var(--text-color, #fff);
+            font-size: 24px;
+            font-family: 'Instagram Sans', 'Outfit', sans-serif;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+    }
+
+    .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: var(--text-color, #fff);
+            padding: 12px 10px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+            font-size: 16px;
+            font-weight: 500;
+
+            &:hover {
+                background-color: var(--hover-color, rgba(255, 255, 255, 0.1));
+            }
+
+            .icon {
+                font-size: 24px;
+            }
+
+            .sidebar-profile-pic {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+    }
+
+    .sidebar-bottom {
+        margin-top: auto;
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: none;
+            border: none;
+            color: var(--text-color, #fff);
+            padding: 12px 10px;
+            width: 100%;
+            text-align: left;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+
+            &:hover {
+                background-color: var(--hover-color, rgba(255, 255, 255, 0.1));
+            }
+            .icon {
+                font-size: 24px;
+            }
+        }
+    }
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    .sidebar {
+        top: auto;
+        bottom: 0;
+        height: 60px;
+        width: 100%;
+        border-right: none;
+        border-top: 1px solid var(--border-color, #262626);
+        flex-direction: row;
+        padding: 0;
+        justify-content: space-around;
+        align-items: center;
+
+        .sidebar-logo, .sidebar-bottom {
+            display: none; /* Hide logo and logout on mobile nav for now */
+        }
+
+        .sidebar-nav {
+            flex-direction: row;
+            width: 100%;
+            justify-content: space-around;
+            gap: 0;
+
+            .sidebar-link {
+                padding: 15px;
+                border-radius: 0;
+                
+                .text {
+                    display: none; /* Hide text on mobile */
+                }
+            }
+        }
+    }
+}

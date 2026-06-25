@@ -1,0 +1,95 @@
+.search-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 30px;
+
+    .search-container {
+        max-width: 600px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+
+        h1 {
+            font-size: 24px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+
+            input {
+                flex: 1;
+                padding: 12px 15px;
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+                background-color: var(--secondary-bg);
+                color: var(--text-color);
+                font-size: 16px;
+                outline: none;
+
+                &:focus {
+                    border-color: var(--primary-color);
+                }
+            }
+
+            button {
+                padding: 0 20px;
+                border-radius: 8px;
+                background-color: var(--primary-color);
+                color: white;
+                border: none;
+                cursor: pointer;
+                font-weight: 600;
+
+                &:hover {
+                    opacity: 0.9;
+                }
+            }
+        }
+
+        .search-results {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            .search-result-item {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                padding: 15px;
+                background-color: var(--secondary-bg);
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+
+                &:hover {
+                    background-color: var(--hover-color);
+                }
+
+                img {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+
+                .user-info {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+
+                    strong {
+                        font-size: 16px;
+                    }
+
+                    span {
+                        font-size: 14px;
+                        color: #a8a8a8;
+                    }
+                }
+            }
+        }
+    }
+}

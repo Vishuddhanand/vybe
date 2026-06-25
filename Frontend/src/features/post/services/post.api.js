@@ -32,3 +32,8 @@ export async function unlikePost(postId) {
     const response = await api.post(`/api/posts/unlike/${postId}`)
     return response.data
 }
+
+export async function deletePost(postId) {
+    const response = await api.delete(`/api/posts/${postId}`)
+    return response.data
+}

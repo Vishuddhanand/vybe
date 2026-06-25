@@ -24,7 +24,7 @@ const Login = () => {
     }
 
     if (loading) {
-        return (<main><h1>Loading...</h1></main>)
+        return (<main><div className="loading-spinner-container"><div className="loading-spinner"></div></div></main>)
     }
 
 

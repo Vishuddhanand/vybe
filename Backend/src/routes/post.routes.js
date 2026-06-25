@@ -21,7 +21,6 @@ postRouter.post("/unlike/:postId", identifyUser, postController.unlikePostContro
  */
 
 postRouter.get("/feed", identifyUser, postController.getFeedController)
-
-
+postRouter.delete("/:postId", identifyUser, postController.deletePostController)
 
 module.exports = postRouter

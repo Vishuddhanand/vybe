@@ -135,6 +135,7 @@ async function unlikePostController(req, res) {
 async function getFeedController(req, res) {
 
     const user = req.user
+    const followModel = require("../models/follow.model")
 
     const posts = await Promise.all((await postModel.find({}).sort({ _id: -1 }).populate("user").lean())
         .map(async (post) => {
@@ -143,8 +144,19 @@ async function getFeedController(req, res) {
                 user: user.username,
                 post: post._id
             })
+            
+            const likeCount = await likeModel.countDocuments({
+                post: post._id
+            })
+            
+            const isFollowing = await followModel.findOne({
+                follower: user.username,
+                followee: post.user.username
+            })
 
             post.isLiked = Boolean(isLiked)
+            post.likeCount = likeCount
+            post.isFollowing = Boolean(isFollowing)
 
             return post
         }))
@@ -157,11 +169,40 @@ async function getFeedController(req, res) {
     })
 }
 
+async function deletePostController(req, res) {
+    try {
+        const postId = req.params.postId;
+        const userId = req.user.id; // user ID from JWT
+
+        const post = await postModel.findById(postId);
+
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+
+        // Check if the user is the owner of the post
+        if (post.user.toString() !== userId) {
+            return res.status(403).json({ message: "You are not authorized to delete this post" });
+        }
+
+        // Delete associated likes
+        await likeModel.deleteMany({ post: postId });
+
+        // Delete the post
+        await postModel.findByIdAndDelete(postId);
+
+        res.status(200).json({ message: "Post deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     createPostController,
     getPostController,
     getPostDetailsController,
     likePostController,
     unlikePostController,
-    getFeedController
+    getFeedController,
+    deletePostController
 }
