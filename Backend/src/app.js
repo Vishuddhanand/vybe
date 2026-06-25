@@ -8,8 +8,10 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
     credentials : true,
-    origin : "http://localhost:5173"
+    origin : ["http://localhost:5173" ]
 }))
+
+app.use(express.static("./public"))
 
 
 // required routes
@@ -21,6 +23,10 @@ const userRouter = require("./routes/user.routes")
 app.use("/api/auth" , authRouter)
 app.use("/api/posts" , postRouter)
 app.use("/api/users" , userRouter)
+
+app.use('*name', (req, res) => {
+  res.sendFile(path.join(__dirname,"..", "public/index.html"));
+});
 
 
 module.exports = app
