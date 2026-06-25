@@ -6,7 +6,7 @@ import '../style/sidebar.scss';
 
 const Sidebar = () => {
  
-    const { user } = useContext(AuthContext);
+    const { user, handleLogout } = useContext(AuthContext);
 
     return (
         <aside className="sidebar">
@@ -35,8 +35,8 @@ const Sidebar = () => {
             </div>
 
             <div className="sidebar-bottom">
-                <button className="logout-btn" onClick={() => {
-                    localStorage.removeItem('token');
+                <button className="logout-btn" onClick={async () => {
+                    await handleLogout();
                     window.location.href = '/login';
                 }}>
                     <i className="ri-logout-box-r-line icon"></i>

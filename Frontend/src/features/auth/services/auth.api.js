@@ -39,3 +39,7 @@ export async function getMe() {
     return response.data
 }
 
+export async function logout() {
+    const response = await api.post("/logout")
+    return response.data
+}

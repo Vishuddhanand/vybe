@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useState, useEffect } from "react";
-import { register, login, getMe } from "./services/auth.api";
+import { register, login, getMe, logout } from "./services/auth.api";
 
 export const AuthContext = createContext()
 
@@ -53,8 +53,23 @@ export function AuthProvider({ children }) {
         }
     }
 
+    const handleLogout = async () => {
+        setLoading(true)
+        try {
+            await logout()
+            setUser(null)
+        }
+        catch (err) {
+            console.log(err)
+            throw err;
+        }
+        finally {
+            setLoading(false)
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ user, loading, handleRegister, handleLogin }}>
+        <AuthContext.Provider value={{ user, loading, handleRegister, handleLogin, handleLogout }}>
             {children}
         </AuthContext.Provider>
     )
