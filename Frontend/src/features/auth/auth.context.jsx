@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useState, useEffect } from "react";
 import { register, login, getMe } from "./services/auth.api";
 
@@ -30,6 +31,7 @@ export function AuthProvider({ children }) {
         }
         catch (err) {
             console.log(err)
+            throw err;
         }
         finally {
             setLoading(false)
@@ -44,6 +46,7 @@ export function AuthProvider({ children }) {
         }
         catch (err) {
             console.log(err)
+            throw err;
         }
         finally {
             setLoading(false)

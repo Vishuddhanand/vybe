@@ -22,6 +22,7 @@ const Sidebar = () => {
                 <Link to="/search" className="sidebar-link">
                     <i className="ri-search-line icon"></i>
                     <span className="text">Search</span>
+            
                 </Link>
                 <Link to="/create-post" className="sidebar-link">
                     <i className="ri-add-box-line icon"></i>

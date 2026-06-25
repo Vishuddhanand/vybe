@@ -13,6 +13,7 @@ userRouter.post("/unfollow/:username", identifyUser, userController.unfollowUser
 userRouter.get("/profile/:username", identifyUser, userController.getUserProfileController)
 userRouter.put("/profile", identifyUser, express.json(), userController.updateUserProfileController)
 userRouter.get("/search", identifyUser, userController.searchUsersController)
+userRouter.get("/all", identifyUser, userController.getAllUsersController)
 userRouter.put("/profile-pic", identifyUser, upload.single("image"), userController.updateProfilePicController)
 
 

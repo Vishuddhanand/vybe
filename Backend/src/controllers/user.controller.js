@@ -5,9 +5,7 @@ const ImageKit = require("@imagekit/nodejs")
 const { toFile } = require("@imagekit/nodejs")
 
 const imagekit = new ImageKit({
-    privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
-    publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
-    urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
+    privateKey: process.env.IMAGEKIT_PRIVATE_KEY
 })
 
 async function followUserController(req, res) {
@@ -149,6 +147,22 @@ async function searchUsersController(req, res) {
     }
 }
 
+async function getAllUsersController(req, res) {
+    try {
+        const currentUsername = req.user.username;
+        const users = await userModel.find({
+            username: { $ne: currentUsername }
+        }).select("username profileImage bio").sort({ _id: -1 }).lean();
+
+        res.status(200).json({
+            message: "All users fetched successfully",
+            users
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 async function updateProfilePicController(req, res) {
     try {
         const username = req.user.username;
@@ -234,6 +248,7 @@ module.exports = {
     unfollowUserController,
     getUserProfileController,
     searchUsersController,
+    getAllUsersController,
     updateProfilePicController,
     updateUserProfileController
 }

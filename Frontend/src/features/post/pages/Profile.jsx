@@ -2,9 +2,11 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { AuthContext } from '../../auth/auth.context';
 import { getUserProfile, followUser, unfollowUser, updateProfilePic, updateUserProfile } from '../services/user.api';
-import { deletePost } from '../services/post.api';
+import { deletePost, likePost, unlikePost } from '../services/post.api';
 import Sidebar from '../components/Sidebar';
+import Post from '../components/Post';
 import '../style/profile.scss';
+import '../style/feed.scss';
 
 const Profile = () => {
     const { username } = useParams();
@@ -13,6 +15,7 @@ const Profile = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
+    const [selectedPost, setSelectedPost] = useState(null);
     
     // Edit Profile State
     const [isEditing, setIsEditing] = useState(false);
@@ -96,12 +99,51 @@ const Profile = () => {
         
         setPosts(posts.filter(p => p._id !== postId));
         setProfile(prev => ({ ...prev, postsCount: prev.postsCount - 1 }));
+        if (selectedPost && selectedPost._id === postId) {
+            setSelectedPost(null);
+        }
         
         try {
             await deletePost(postId);
         } catch (error) {
             console.error("Failed to delete post", error);
             fetchProfile();
+        }
+    };
+
+    const handleLikePost = async (postId) => {
+        const updatePosts = posts.map(p => {
+            if (p._id === postId) {
+                return { ...p, isLiked: true, likeCount: (p.likeCount || 0) + 1 };
+            }
+            return p;
+        });
+        setPosts(updatePosts);
+        if (selectedPost && selectedPost._id === postId) {
+            setSelectedPost({ ...selectedPost, isLiked: true, likeCount: (selectedPost.likeCount || 0) + 1 });
+        }
+        try {
+            await likePost(postId);
+        } catch (error) {
+            console.error("Failed to like post", error);
+        }
+    };
+
+    const handleUnlikePost = async (postId) => {
+        const updatePosts = posts.map(p => {
+            if (p._id === postId) {
+                return { ...p, isLiked: false, likeCount: Math.max(0, (p.likeCount || 0) - 1) };
+            }
+            return p;
+        });
+        setPosts(updatePosts);
+        if (selectedPost && selectedPost._id === postId) {
+            setSelectedPost({ ...selectedPost, isLiked: false, likeCount: Math.max(0, (selectedPost.likeCount || 0) - 1) });
+        }
+        try {
+            await unlikePost(postId);
+        } catch (error) {
+            console.error("Failed to unlike post", error);
         }
     };
 
@@ -227,10 +269,10 @@ const Profile = () => {
                         </div>
                     ) : (
                         posts.map(post => (
-                            <div key={post._id} className="grid-item">
+                            <div key={post._id} className="grid-item" onClick={() => setSelectedPost(post)}>
                                 <img src={post.imgUrl} alt={post.caption || 'Post'} />
                                 {isOwnProfile && (
-                                    <button className="grid-delete-btn" onClick={() => handleDeletePost(post._id)}>
+                                    <button className="grid-delete-btn" onClick={(e) => { e.stopPropagation(); handleDeletePost(post._id); }}>
                                         <i className="ri-delete-bin-line"></i>
                                     </button>
                                 )}
@@ -239,6 +281,25 @@ const Profile = () => {
                     )}
                 </div>
             </div>
+
+            {selectedPost && (
+                <div className="post-modal-overlay" onClick={() => setSelectedPost(null)}>
+                    <button className="close-modal-btn" onClick={() => setSelectedPost(null)}>
+                        <i className="ri-close-line"></i>
+                    </button>
+                    <div className="post-modal-content" onClick={e => e.stopPropagation()}>
+                        <Post 
+                            user={profile} 
+                            post={selectedPost} 
+                            handleLikePost={handleLikePost} 
+                            handleUnlikePost={handleUnlikePost} 
+                            handleDeletePost={(postId) => {
+                                handleDeletePost(postId);
+                            }}
+                        />
+                    </div>
+                </div>
+            )}
         </main>
     );
 };

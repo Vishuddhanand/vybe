@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { AuthContext } from '../../auth/auth.context'
 
@@ -6,6 +6,12 @@ const Post = ({ user, post, handleLikePost, handleUnlikePost, handleDeletePost }
     const { user: currentUser } = useContext(AuthContext);
     const isOwner = currentUser?.username === user.username;
     const navigate = useNavigate();
+    const [isFollowing, setIsFollowing] = useState(post.isFollowing);
+
+    // Sync state if post prop changes
+    useEffect(() => {
+        setIsFollowing(post.isFollowing);
+    }, [post.isFollowing]);
 
     return (
         <div className="post">
@@ -19,13 +25,14 @@ const Post = ({ user, post, handleLikePost, handleUnlikePost, handleDeletePost }
                 </div>
                 
                 <div className="post-actions">
-                    {!isOwner && !post.isFollowing && (
+                    {!isOwner && !isFollowing && (
                         <button className="post-follow-btn" onClick={async () => {
                             const { followUser } = await import('../services/user.api');
                             try {
+                                setIsFollowing(true);
                                 await followUser(user.username);
-                                window.location.reload(); 
                             } catch (e) {
+                                setIsFollowing(false);
                                 console.error(e);
                             }
                         }}>

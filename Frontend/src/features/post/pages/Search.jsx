@@ -1,18 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { searchUsers } from '../services/user.api';
+import { searchUsers, getAllUsers } from '../services/user.api';
 import Sidebar from '../components/Sidebar';
 import '../style/search.scss';
 
 const Search = () => {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
+    const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchAllUsers = async () => {
+            try {
+                const data = await getAllUsers();
+                setAllUsers(data.users || []);
+            } catch (error) {
+                console.error("Failed to fetch users", error);
+            } finally {
+                setInitialLoading(false);
+            }
+        };
+        fetchAllUsers();
+    }, []);
 
     const handleSearch = async (e) => {
         e.preventDefault();
-        if (!query.trim()) return;
+        if (!query.trim()) {
+            setResults([]);
+            return;
+        }
         
         setLoading(true);
         try {
@@ -25,42 +44,71 @@ const Search = () => {
         }
     };
 
+    const displayUsers = query.trim() ? results : allUsers;
+    const hasSearched = query.trim().length > 0;
+
     return (
         <main className="search-page page-layout">
             <Sidebar />
             <div className="search-container">
-                <h1>Search Users</h1>
                 <form onSubmit={handleSearch} className="search-form">
-                    <input 
-                        type="text" 
-                        placeholder="Search by username..." 
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                    />
-                    <button type="submit">Search</button>
+                    <div className="search-input-wrapper">
+                        <i className="ri-search-line"></i>
+                        <input 
+                            type="text" 
+                            placeholder="Search" 
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                        />
+                    </div>
                 </form>
 
-                <div className="search-results">
-                    {loading && <div style={{display: 'flex', justifyContent: 'center', padding: '20px'}}><div className="loading-spinner loading-spinner--sm"></div></div>}
-                    {!loading && results.length === 0 && query && <p>No users found.</p>}
-                    
-                    {results.map(user => (
-                        <div 
-                            key={user._id} 
-                            className="search-result-item"
-                            onClick={() => navigate(`/profile/${user.username}`)}
-                        >
-                            <img 
-                                src={user.profileImage || "https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png"} 
-                                alt={user.username} 
-                            />
-                            <div className="user-info">
-                                <strong>{user.username}</strong>
-                                {user.bio && <span>{user.bio}</span>}
+                {initialLoading ? (
+                    <div className="loading-spinner-container" style={{minHeight: '30vh'}}>
+                        <div className="loading-spinner"></div>
+                    </div>
+                ) : (
+                    <>
+                        {!hasSearched && (
+                            <div className="section-header">
+                                <h2>Suggested</h2>
                             </div>
+                        )}
+
+                        {hasSearched && (
+                            <div className="section-header">
+                                <h2>Results</h2>
+                            </div>
+                        )}
+
+                        <div className="search-results">
+                            {loading && <div style={{display: 'flex', justifyContent: 'center', padding: '20px'}}><div className="loading-spinner loading-spinner--sm"></div></div>}
+                            {!loading && hasSearched && results.length === 0 && <p className="no-results">No users found.</p>}
+                            
+                            {!loading && displayUsers.map(user => (
+                                <div 
+                                    key={user._id} 
+                                    className="search-result-item"
+                                    onClick={() => navigate(`/profile/${user.username}`)}
+                                >
+                                    <img 
+                                        src={user.profileImage || "https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png"} 
+                                        alt={user.username} 
+                                    />
+                                    <div className="user-info">
+                                        <strong>{user.username}</strong>
+                                        {user.bio && <span>{user.bio}</span>}
+                                    </div>
+                                    <i className="ri-arrow-right-s-line chevron"></i>
+                                </div>
+                            ))}
+
+                            {!loading && !hasSearched && allUsers.length === 0 && (
+                                <p className="no-results">No other users on the platform yet.</p>
+                            )}
                         </div>
-                    ))}
-                </div>
+                    </>
+                )}
             </div>
         </main>
     );
