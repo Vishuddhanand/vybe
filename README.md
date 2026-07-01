@@ -1,4 +1,4 @@
-# 🚀 Vybe
+# Vybe
 
 > A modern full-stack social media platform built with the MERN Stack.
 
@@ -9,7 +9,7 @@
 
 ---
 
-## 📖 About
+## About
 
 Vybe is a modern social media application inspired by today's social networking platforms. It allows users to create accounts, upload posts, interact with others through likes and comments, follow other users, and manage their profiles.
 
@@ -17,25 +17,25 @@ The project focuses on building a complete MERN Stack application with authentic
 
 ---
 
-## ✨ Features
+## Features
 
-- 🔐 User Authentication
-- 👤 User Profiles
-- 🖼️ Upload Posts
-- ❤️ Like & Unlike Posts
-- 💬 Comment System
-- 👥 Follow / Unfollow Users
-- 🔍 Search Users
-- 📝 Edit Profile
-- 📷 Change Profile Picture
-- 🗑️ Delete Posts
-- 📱 Responsive Design
-- ☁️ Cloud Image Upload
-- 🌙 Modern Dark UI
+-  User Authentication
+-  User Profiles
+-  Upload Posts
+-  Like & Unlike Posts
+-  Comment System
+-  Follow / Unfollow Users
+-  Search Users
+-  Edit Profile
+-  Change Profile Picture
+-  Delete Posts
+-  Responsive Design
+-  Cloud Image Upload
+-  Modern Dark UI
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 ### Frontend
 
@@ -62,7 +62,7 @@ The project focuses on building a complete MERN Stack application with authentic
 - Render
 
 
-## 👨‍💻 Author
+## Author
 
 **Vishuddhanand Pillewan**
 
